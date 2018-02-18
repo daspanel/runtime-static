@@ -38,7 +38,9 @@ help:
 	@echo "docker-up-dev         - Run docker-compose -f docker-compose-dev.yml up -d."
 	@echo "docker-down-dev       - Run docker-compose -f docker-compose-dev.yml down."
 	@echo "docker-build-dev      - build Docker dev image."
+	@echo "docker-build          - build Docker latest image."
 	@echo "docker-clean-dev      - clean Docker dev image."
+	@echo "docker-clean          - clean Docker latest image."
 	@echo "docker-clean-dangling - clean all Docker dangling images."
 	@echo "check-status          - will check whether there are outstanding changes."
 	@echo "check-release         - will check whether the current directory matches the tagged release in git."
@@ -67,8 +69,14 @@ docker-clean-dangling:
 docker-clean-dev:
 	-@docker rmi daspanel/runtime-static:dev
 
+docker-clean:
+	-@docker rmi daspanel/runtime-static:latest
+
 docker-build-dev: clean docker-clean-dev rootfs-fixperms
 	docker build -f src/docker/Dockerfile.dev -t daspanel/runtime-static:dev src/docker
+
+docker-build: clean docker-clean rootfs-fixperms
+	docker build -f src/docker/Dockerfile -t daspanel/runtime-static:latest src/docker
 
 install-tools:
 	sudo pip install gitchangelog pystache
