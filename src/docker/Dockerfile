@@ -34,7 +34,6 @@ ENV TZ="UTC"
 ENV \
     # Stop container initialization if error occurs in cont-init.d, fix-attrs.d script's
     S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
-
     # Timezone
     TZ="UTC" 
 
@@ -60,7 +59,7 @@ COPY rootfs /
 RUN set -x \
 
     # Install minimal packages
-    && apk add --update --no-cache ca-certificates wget tzdata unzip tar libcap \
+    && apk add --update --no-cache ca-certificates wget tzdata unzip tar libcap rsyslog \
 
     # Install s6 overlay init system
     && wget https://github.com/just-containers/s6-overlay/releases/download/$S6_OVERLAY_VERSION/s6-overlay-amd64.tar.gz --no-check-certificate -O /tmp/s6-overlay.tar.gz \
@@ -75,10 +74,11 @@ RUN set -x \
     && rm -rf /tmp/* \
     && rm -rf /var/cache/apk/*
 
+# Expose ports for the service
+EXPOSE 80 443 2015
+
 # Let's S6 control the init system
 ENTRYPOINT ["/init"]
 CMD []
 
-# Expose ports for the service
-EXPOSE 80 443 2015
 
