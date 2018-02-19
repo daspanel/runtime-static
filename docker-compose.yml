@@ -1,0 +1,37 @@
+version: '3.3'
+
+services:
+  runtime-static:
+    container_name: daspanel-${DASPANEL_SITE_UUID}-${DASPANEL_SITE_VERSION}
+    restart: unless-stopped
+    image: daspanel/runtime-static:latest
+    deploy:
+        restart_policy:
+            condition: on-failure
+            delay: 5s
+            max_attempts: 3
+            window: 120s
+    configs:
+        - source: daspanel_site_config
+          target: /${DASPANEL_SITE_UUID}-${DASPANEL_SITE_VERSION}.json
+          uid: '1000'
+          gid: '1000'
+          mode: 0440
+    volumes:
+      - ${CONTAINER_DATA_PATH}:/opt/daspanel/data/${DASPANEL_SYS_UUID}/content/${DASPANEL_SITE_UUID}/v/${DASPANEL_SITE_VERSION}
+      - ${CONTAINER_SSL_PATH}:/opt/daspanel/data/${DASPANEL_SYS_UUID}/certs
+    environment:
+      VIRTUAL_HOST: ${DOMAINS}
+      LETSENCRYPT_HOST: ${DOMAINS}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+      SSL:
+      SSLCERT: ${CONTAINER_SSL_CERTIFICATE}
+      SSLKEY: ${CONTAINER_SSL_KEY}
+
+configs:
+    daspanel_site_config:
+        file: ./${DASPANEL_SITE_UUID}-${DASPANEL_SITE_VERSION}.json
+networks:
+    default:
+       external:
+         name: ${NETWORK}
