@@ -1,0 +1,4 @@
+pipeline:
+  docker:
+    image: daspanel/teste
+    repo: daspanel/runtime-static
