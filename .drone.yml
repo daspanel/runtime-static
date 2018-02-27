@@ -1,4 +1,4 @@
 pipeline:
   docker:
-    image: daspanel/teste
+    image: plugins/docker
     repo: daspanel/runtime-static
