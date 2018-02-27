@@ -4,3 +4,4 @@ pipeline:
     repo: daspanel/runtime-static
     context: src/docker
     dockerfile: src/docker/Dockerfile
+    secrets: [ docker_username, docker_password ]
