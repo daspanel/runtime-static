@@ -2,4 +2,5 @@ pipeline:
   docker:
     image: plugins/docker
     repo: daspanel/runtime-static
+    context: src/docker
     dockerfile: src/docker/Dockerfile
