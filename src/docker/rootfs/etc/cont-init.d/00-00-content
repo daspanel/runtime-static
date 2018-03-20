@@ -1,0 +1,49 @@
+#!/usr/bin/with-contenv sh
+
+USER_ID=${DASPANEL_SYS_USERID:-1000}
+
+echo "[DASPANEL] INFO: Starting with UID $USER_ID"
+addgroup -g $USER_ID daspanel
+adduser -s /bin/false -D -h /home/daspanel -u $USER_ID -G daspanel daspanel
+
+export DASPANEL_CONTAINER_TYPE="runtime-static"
+printf $DASPANEL_CONTAINER_TYPE > /var/run/s6/container_environment/DASPANEL_CONTAINER_TYPE
+
+# Content zip file URL must be informed
+if [ -z "$DASPANEL_CONTENT_URL" ]; then
+    echo "[DASPANEL-$DASPANEL_CONTAINER_TYPE] ERROR: You must set the env variable DASPANEL_CONTENT_URL to a valid zip file url"
+    exit 1
+fi
+
+# Content zip file password must be informed
+if [ -z "$DASPANEL_CONTENT_PWD" ]; then
+    echo "[DASPANEL-$DASPANEL_CONTAINER_TYPE] ERROR: You must set the env variable DASPANEL_CONTENT_PWD to a valid password"
+    exit 1
+fi
+
+# Letsencrypt account email must be informed
+if [ -z "$DASPANEL_ACME_EMAIL" ]; then
+    echo "[DASPANEL-$DASPANEL_CONTAINER_TYPE] ERROR: You must set the env variable DASPANEL_ACME_EMAIL to a valid email"
+    exit 1
+fi
+
+# Install content
+cd /
+echo "Downloadinfg: $DASPANEL_CONTENT_URL"
+wget "$DASPANEL_CONTENT_URL" --no-check-certificate -O /runtime-content.zip
+unzip -P "$DASPANEL_CONTENT_PWD" /runtime-content.zip
+if [ -f "/content.zip" ]; then
+    unzip -P "$DASPANEL_CONTENT_PWD" /content.zip
+fi
+
+# Clean downloads
+if [ -f "/runtime-content.zip" ]; then
+    rm /runtime-content.zip
+fi
+if [ -f "/content.zip" ]; then
+    rm /content.zip
+fi
+
+# secure daspanel content
+chown -R $USER_ID:$USER_ID /opt/daspanel/data
+
