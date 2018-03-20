@@ -1,6 +1,13 @@
 # Changelog
 
 
+## 0.2.0 (2018-03-20)
+
+### Other
+
+* Chnafed from staging to real Letsencrypt API. [Abner G Jacobsen]
+
+
 ## 0.1.0 (2018-03-20)
 
 ### Other
