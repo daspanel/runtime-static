@@ -3,7 +3,7 @@
 STARTCMD="su-exec daspanel:daspanel /usr/sbin/caddy --conf=/etc/caddy/caddyfile --log=stdout"
 
 [[ -z "${CADDY_AGREE}" ]] && CADDY_AGREE="true"
-[[ -z "${CADDY_CA}" ]] && CADDY_CA="https://acme-staging.api.letsencrypt.org/directory"
+[[ -z "${CADDY_CA}" ]] && CADDY_CA="https://acme-v01.api.letsencrypt.org/directory"
 [[ -z "${CADDY_CPU}" ]] && CADDY_CPU="100%"
 [[ -z "${CADDY_EMAIL}" ]] && CADDY_EMAIL="$DASPANEL_ACME_EMAIL"
 [[ -z "${CADDY_GRACE}" ]] && CADDY_GRACE="5s"
